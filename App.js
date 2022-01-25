@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import { Themes } from './assets/Themes';
 import themes from './assets/Themes/themes';
 
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     Sydney: require('./assets/Fonts/Sydney-Serial-Regular.ttf'),
@@ -21,15 +22,6 @@ export default function App() {
         <Text style={styles.locationText}>2 miles away</Text>
       </ImageBackground>
     );
-  }
-
-  const LabeledIcon = (props) => {
-    return(
-      <View style={styles.toolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/discover_light.png")}></Image>
-          <Text style={styles.iconText}> Discover</Text>
-      </View>
-    )
   }
 
   const AudioBox = (props) => {
@@ -51,28 +43,47 @@ export default function App() {
   const BottomToolbar = (props) => {
     return(
       <View style={styles.bottomToolbar}>
-        <View style={styles.toolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/discover_light.png")}></Image>
+        
+        <View style={styles.bottomToolbarIcons}>
+          <View style={styles.iconChild}>
+            <Image style={styles.standardIcon} source={require("./assets/Icons/discover_light.png")}></Image>
+          </View>
+          <View>
+            <Text style={styles.iconText}>Discover</Text>
+          </View>
         </View>
-        <View style={styles.toolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/heart_light.png")}></Image>
+        <View style={styles.bottomToolbarIcons}>
+
+          <View style={styles.iconChild}>
+            <Image style={styles.standardIcon} source={require("./assets/Icons/heart_light.png")}></Image>
+          </View>
+          <View style={styles.iconChild}>
+            <Text style={styles.iconText}>Matches</Text>
+          </View>
         </View>
-        <View style={styles.toolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/messages_light.png")}></Image>
+        <View style={styles.bottomToolbarIcons}>
+          <View style={styles.iconChild}>
+            <Image style={styles.standardIcon} source={require("./assets/Icons/messages_light.png")}></Image>
+          </View>
+          <View style={styles.iconChild}>
+            <Text style={styles.iconText}>DMs</Text>
+          </View>
+          
+          
         </View>
       </View>
     )
   }
 
   const TopToolbar = (props) => {
-    return(<View style={styles.TopToolbar}>
-      <View style={styles.toolbarIcons}>
+    return(<View style={styles.topToolbar}>
+      <View style={styles.topToolbarIcons}>
           <Image style={styles.standardIcon} source={require("./assets/Icons/menu_light.png")}></Image>
         </View>
-        <View style={styles.toolbarIcons}>
+        <View style={styles.topToolbarIcons}>
           <Text style={styles.titleText}>ensom</Text>
         </View>
-      <View style={styles.toolbarIcons}>
+      <View style={styles.topToolbarIcons}>
           <Image style={styles.standardIcon} source={require("./assets/Icons/sun.png")}></Image>
       </View>
 
@@ -81,8 +92,7 @@ export default function App() {
   const MainCard = (props) => {
 
     return(
-      <View>
-        <TopToolbar />
+      <View> 
         <View style={styles.cardPiece}>
           <ProfilePic />
         </View>
@@ -95,6 +105,7 @@ export default function App() {
   
   return (
       <View style={styles.container}>
+      <TopToolbar />
           <MainCard />
           <BottomToolbar />
       </View>
@@ -106,25 +117,23 @@ export default function App() {
       container: {
         flex: 1,
         backgroundColor: themes.light.bg,
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: "center",
+        justifyContent: "center"
       },
       card: {
         width: 300,
         height: 350,
-        display: "flex",
-        flexDirection: "row",
       },
       profileText: {
-        fontSize: 42,
+        fontSize: 36,
         fontFamily: "Sydney",
         color: Themes.light.textSecondary,
         textAlign: "left", 
         textAlignVertical: "bottom",
-        paddingLeft: '2%'
+        padding: '5%'
       },
       audioSection: {
-        width: 350,
+        width: 300,
         height: 150,
         borderRadius: 15,
         backgroundColor: themes.light.bgSecondary,
@@ -132,7 +141,7 @@ export default function App() {
         shadowOffset: themes.light.shadows.shadowOffset,
         shadowOpacity: themes.light.shadows.shadowOpacity,
         shadowRadius: themes.light.shadows.shadowRadius,  
-
+        
       },
       audioBox: {
         display: "flex",
@@ -156,33 +165,35 @@ export default function App() {
           height: 45
       },
       audioIcon: {
-        width: 250,
+        width: 210,
         height:40
       },
       locationText: {
         fontFamily: "Sydney",
         color: Themes.light.textSecondary,
-        textAlignVertical: "bottom",
-        paddingLeft: '20%'
+        position: "absolute",
+        bottom: 0,
+        padding: '5%'
       },
       iconText: {
         fontFamily: "Sydney",
         color: Themes.light.textSecondary,
         textAlignVertical: "bottom",
-        paddingLeft: '20%'
       },
       cardPiece:{
-        padding: '5%',
         display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
       },
-      toolbarIcons: {
+      topToolbarIcons: {
+        flex: 1,
         marginTop: "auto",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "center"
       },
+      bottomToolbarIcons: {
+        padding:'5%'
+      },
+
       bottomToolbar:{
         backgroundColor: "black",
         position: 'absolute',
@@ -190,14 +201,22 @@ export default function App() {
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        width: '100%'
       },
-      TopToolbar: {
+      topToolbar: {
           display: "flex",
+          position: "absolute",
+          top: '5%',
           flexDirection: "row",
-          justifyContent: "center",
+          justifyContent: "space-between",
       },
       titleText:{
         fontFamily: "Sydney-Bold",
         fontSize: 42
+      },
+      iconChild:{
+        flex: 1,
+        display: "flex",
+        justifyContent: "center"
       }
   });
