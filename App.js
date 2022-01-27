@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import AppLoading from 'expo-app-loading';
-import { StyleSheet, Text, View, StatusBar, Image, Button, ImageBackground, Platform} from 'react-native';
+import { StyleSheet, Text, View, StatusBar, Image, ImageBackground, Platform, Dimensions} from 'react-native';
 import { useFonts } from 'expo-font';
-import { Themes } from './assets/Themes';
-import themes from './assets/Themes/themes';
-
+import { Themes, Icons, Profiles } from './assets/Themes';
+import { addValidStylePropTypes } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
+import { BottomToolbar } from './components/ToolbarIconWithCaption';
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -15,11 +16,12 @@ export default function App() {
   StatusBar.setBarStyle(Themes.light.statusBar);
   /* ^Don't mind/edit this one either unless you decide to do the dark theme one, in that case, you will have to change it accordingly*/
 
+
   const ProfilePic = (props) => {
     return(
-      <ImageBackground  style={styles.card} imageStyle={{ borderRadius: 10}} resizeMode="cover" source={require("./assets/Profiles/mtl.jpg")}>
-        <Text style={styles.profileText}>MTL</Text>
-        <Text style={styles.locationText}>2 miles away</Text>
+      <ImageBackground  style={styles.card} imageStyle={{ borderRadius: 10}} resizeMode="cover" source={props.image}>
+        <Text style={styles.profileText}>{props.name}</Text>
+        <Text style={styles.locationText}>{props.caption}</Text>
       </ImageBackground>
     );
   }
@@ -30,10 +32,10 @@ export default function App() {
         <Text style={styles.audioText}>My hottest take</Text>
         <View style={styles.audioBox}>
             <View style={styles.audioChild}>
-              <Image style={styles.standardIcon} source={require("./assets/Icons/player_light.png")}></Image>
+              <Image style={styles.mainIcon} source={Icons.player.light}></Image>
             </View>
             <View style={styles.audioChild}>
-              <Image style={styles.audioIcon} source={require("./assets/Icons/audio_waveform_light.png")}></Image>
+              <Image style={styles.audioIcon} source={Icons.audioWave.light}></Image>
             </View>
         </View>
       </View>
@@ -42,59 +44,51 @@ export default function App() {
 
   const BottomToolbar = (props) => {
     return(
-      <View style={styles.bottomToolbar}>
-        
-        <View style={styles.bottomToolbarIcons}>
-          <View style={styles.iconChild}>
-            <Image style={styles.standardIcon} source={require("./assets/Icons/discover_light.png")}></Image>
-          </View>
-          <View>
-            <Text style={styles.iconText}>Discover</Text>
-          </View>
-        </View>
-        <View style={styles.bottomToolbarIcons}>
-
-          <View style={styles.iconChild}>
-            <Image style={styles.standardIcon} source={require("./assets/Icons/heart_light.png")}></Image>
-          </View>
-          <View style={styles.iconChild}>
-            <Text style={styles.iconText}>Matches</Text>
-          </View>
-        </View>
-        <View style={styles.bottomToolbarIcons}>
-          <View style={styles.iconChild}>
-            <Image style={styles.standardIcon} source={require("./assets/Icons/messages_light.png")}></Image>
-          </View>
-          <View style={styles.iconChild}>
-            <Text style={styles.iconText}>DMs</Text>
-          </View>
-          
-          
-        </View>
+      <View style={styles.bottomToolbar}>       
+        <ToolbarIconWithCaption image={Icons.discover.light} text="Discover"/>
+        <ToolbarIconWithCaption image={Icons.heart.light} text="Matches"/>
+        <ToolbarIconWithCaption image={Icons.messages.light} text="DMs" />
       </View>
     )
   }
 
-  const TopToolbar = (props) => {
-    return(<View style={styles.topToolbar}>
-      <View style={styles.topToolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/menu_light.png")}></Image>
+  const ToolbarIconWithCaption = (props) => {
+    return (
+      <View style={styles.bottomToolbarIcons}>
+        <View style={styles.iconChild}>
+          <Image style={styles.standardIcon} source={props.image}></Image>
         </View>
+        <View style={styles.iconChild}>
+          <Text style={styles.iconText}>{props.text}</Text>
+        </View>
+    </View>
+    );
+  }
+
+  const ToolbarIcon =  (props) => {
+    return(<View style={styles.topToolbarIcons}>
+            <Image style={styles.mainIcon} source={props.image}></Image>
+          </View>);
+
+  }
+
+  const Navigation = (props) => {
+    return(<View style={styles.topToolbar}>
+      <ToolbarIcon image={Icons.menu.light}/>
         <View style={styles.topToolbarIcons}>
           <Text style={styles.titleText}>ensom</Text>
         </View>
-      <View style={styles.topToolbarIcons}>
-          <Image style={styles.standardIcon} source={require("./assets/Icons/sun.png")}></Image>
-      </View>
-
+      <ToolbarIcon image={Icons.sun}/>
     </View>);
   }
   const MainCard = (props) => {
-
+    
+    const members = [Profiles.mtl, Profiles.drell, Profiles.man, Profiles.woman, Profiles.brubakercole]
+    const idx = props.idx
     return(
       <View> 
         <View style={styles.cardPiece}>
-          <ProfilePic />
+          <ProfilePic image={members[idx].image} name={members[idx].name} caption={members[idx].caption}/>
         </View>
         <View styles={styles.cardPiece}>
           <AudioBox />
@@ -102,27 +96,32 @@ export default function App() {
       </View>
     );
   }
+
+
   
   return (
+    
       <View style={styles.container}>
-      <TopToolbar />
-          <MainCard />
+          <Navigation />
+          <MainCard idx={0} onClick={()=> setIdx( 1 )}/>
           <BottomToolbar />
       </View>
     );
   }
-
-
-    const styles = StyleSheet.create({
+  const windowWidth = Dimensions.get('window').width;
+  const cardWidth = windowWidth * 0.75;
+  const cardHeight = 1.1 * cardWidth;
+  
+  const styles = StyleSheet.create({
       container: {
         flex: 1,
-        backgroundColor: themes.light.bg,
+        backgroundColor: Themes.light.bg,
         alignItems: "center",
         justifyContent: "center"
       },
       card: {
-        width: 300,
-        height: 350,
+        width: cardWidth,
+        height: cardHeight,
       },
       profileText: {
         fontSize: 36,
@@ -130,39 +129,44 @@ export default function App() {
         color: Themes.light.textSecondary,
         textAlign: "left", 
         textAlignVertical: "bottom",
-        padding: '5%'
+        padding: '3%'
       },
       audioSection: {
-        width: 300,
+        width: cardWidth,
         height: 150,
         borderRadius: 15,
-        backgroundColor: themes.light.bgSecondary,
-        shadowColor: themes.light.shadowColor,
-        shadowOffset: themes.light.shadows.shadowOffset,
-        shadowOpacity: themes.light.shadows.shadowOpacity,
-        shadowRadius: themes.light.shadows.shadowRadius,  
-        
+        justifyContent: "center",
+        backgroundColor: Themes.light.bgSecondary,
+  
+        shadowColor: Themes.light.shadowColor,
+        shadowOffset: Themes.light.shadows.shadowOffset,
+        shadowOpacity: Themes.light.shadows.shadowOpacity,
+        shadowRadius: Themes.light.shadows.shadowRadius, 
       },
       audioBox: {
         display: "flex",
         flexDirection: "row",
-        padding:'3%',
+        alignItems: "center",
+        justifyContent: "center"
       },
       audioChild: {
         display:"flex",
         alignItems: "center", 
-        padding: '1%',
+        padding: '2%',
       },
       audioText: {
         fontFamily: "Sydney",
         color: Themes.light.text,
-        fontSize: 30,
-        paddingTop:'5%',
+        fontSize: 32,
         paddingLeft: '5%'
       },
       standardIcon: {
-          width: 45,
-          height: 45
+          width: 30,
+          height: 30
+      },
+      mainIcon: {
+        width: 50,
+        height: 50
       },
       audioIcon: {
         width: 210,
@@ -173,34 +177,43 @@ export default function App() {
         color: Themes.light.textSecondary,
         position: "absolute",
         bottom: 0,
-        padding: '5%'
+        padding: '5%',
+        fontSize: 18
       },
       iconText: {
         fontFamily: "Sydney",
         color: Themes.light.textSecondary,
         textAlignVertical: "bottom",
+        textAlign: "center"
       },
       cardPiece:{
         display: "flex",
+        paddingBottom: "3%",
+  
+        shadowColor: Themes.light.shadowColor,
+        shadowOffset: Themes.light.shadows.shadowOffset,
+        shadowOpacity: Themes.light.shadows.shadowOpacity,
+        shadowRadius: Themes.light.shadows.shadowRadius,  
       },
       topToolbarIcons: {
         flex: 1,
         marginTop: "auto",
         display: "flex",
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        height: Platform.OS === 'ios' ? 41 : 54
       },
       bottomToolbarIcons: {
-        padding:'5%'
+        padding:'3%'
       },
-
+  
       bottomToolbar:{
         backgroundColor: "black",
         position: 'absolute',
         bottom: 0,
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         width: '100%'
       },
       topToolbar: {
@@ -217,6 +230,14 @@ export default function App() {
       iconChild:{
         flex: 1,
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "5%"
       }
   });
+
+
+
+
+
+    
