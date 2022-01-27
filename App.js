@@ -4,7 +4,9 @@ import { StyleSheet, Text, View, StatusBar, Image, ImageBackground, Platform, Di
 import { useFonts } from 'expo-font';
 import { Themes, Icons, Profiles } from './assets/Themes';
 import { addValidStylePropTypes } from 'react-native/Libraries/StyleSheet/StyleSheetValidation';
-import { BottomToolbar } from './components/ToolbarIconWithCaption';
+import BottomToolbar from './components/BottomToolbar';
+import Navigation from './components/Navigation';
+
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -42,45 +44,13 @@ export default function App() {
     );
   }
 
-  const BottomToolbar = (props) => {
-    return(
-      <View style={styles.bottomToolbar}>       
-        <ToolbarIconWithCaption image={Icons.discover.light} text="Discover"/>
-        <ToolbarIconWithCaption image={Icons.heart.light} text="Matches"/>
-        <ToolbarIconWithCaption image={Icons.messages.light} text="DMs" />
-      </View>
-    )
-  }
-
-  const ToolbarIconWithCaption = (props) => {
-    return (
-      <View style={styles.bottomToolbarIcons}>
-        <View style={styles.iconChild}>
-          <Image style={styles.standardIcon} source={props.image}></Image>
-        </View>
-        <View style={styles.iconChild}>
-          <Text style={styles.iconText}>{props.text}</Text>
-        </View>
-    </View>
-    );
-  }
-
   const ToolbarIcon =  (props) => {
     return(<View style={styles.topToolbarIcons}>
             <Image style={styles.mainIcon} source={props.image}></Image>
           </View>);
-
   }
 
-  const Navigation = (props) => {
-    return(<View style={styles.topToolbar}>
-      <ToolbarIcon image={Icons.menu.light}/>
-        <View style={styles.topToolbarIcons}>
-          <Text style={styles.titleText}>ensom</Text>
-        </View>
-      <ToolbarIcon image={Icons.sun}/>
-    </View>);
-  }
+
   const MainCard = (props) => {
     
     const members = [Profiles.mtl, Profiles.drell, Profiles.man, Profiles.woman, Profiles.brubakercole]
@@ -96,7 +66,6 @@ export default function App() {
       </View>
     );
   }
-
 
   
   return (
